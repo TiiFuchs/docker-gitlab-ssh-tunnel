@@ -3,36 +3,46 @@
 DIR="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")" && pwd)"
 SSHD_CONFIG="/etc/ssh/sshd_config"
 
-# Check if sshd_config already contains the section
+# =======================================
+# Create user if it does not exist
+# =======================================
 
-if grep -q 'Match User git' "$SSHD_CONFIG"; then
-	echo "The configuration for the git user seems to be already existent in your $SSHD_CONFIG."
-	echo "Please remove it first to apply it again."
-	exit 1
+if ! id git &>/dev/null; then
+
+	# Create user `git`
+	adduser --system --shell /bin/bash git
+
+	# Add git user to docker group
+	adduser git docker
+
+else
+
+	echo "git user already exists. Skipping..."
+
 fi
 
-# Ask if changes to the /etc/ssh/sshd_config can be made
-cat <<EOT
-This scripts appends the following configuration section to your $SSHD_CONFIG. Are you okay with that? (yes/no)
+# =======================================
+# Add Match User directive to sshd_config
+# =======================================
+
+if ! grep -q 'Match User git' "$SSHD_CONFIG"; then
+
+	cat >>$SSHD_CONFIG <<EOT
 
 Match User git
-│ AuthorizedKeysCommand ${DIR}/authorized_keys.sh
-│ AuthorizedKeysCommandUser root
+  AuthorizedKeysCommand ${DIR}/authorized_keys.sh
+  AuthorizedKeysCommandUser git
 EOT
 
-read user_input
+else
 
-if [[ "$user_input" != 'yes' ]]; then
-	echo "Aborting..."
-	exit 1
+	echo "There is already a configuration for the user git in ${SSHD_CONFIG}. Skipping..."
+
 fi
 
-cat >>$SSHD_CONFIG <<EOT
-
-Match User git 
-  AuthorizedKeysCommand ${DIR}/authorized_keys.sh
-  AuthorizedKeysCommandUser root
-EOT
+# =======================================
+# Set rights
+# =======================================
 
 chown root:root $DIR/authorized_keys.sh
 chmod 0755 $DIR/authorized_keys.sh
