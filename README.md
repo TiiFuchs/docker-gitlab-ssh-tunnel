@@ -9,11 +9,15 @@ If you want to use the default ports with both services, this is a solution.
 
 ## How is it working?
 
-If git communicates with a repo via ssh, it connects to the git user. \
-This user exists on the host machine and an [AuthorizedKeysCommand](https://man.openbsd.org/sshd_config#AuthorizedKeysCommand) is configured in the sshd_config, so it runs the command to validate the authorized_keys. \
-The authorized_keys.sh is linked here. This script outputs the authorized_keys from within the Gitlab Docker container, that gitlab uses to authorize its users. \
-The command to the gitlab-shell is replaced on-the-fly to point to the tunnel.sh script from this repo.\
-The tunnel.sh script tunnels the command through to the Gitlab Docker container to exactly that script, that we replaced from the command inside the authorized_keys.
+- If git communicates with a repo via ssh, it connects to the git user.
+
+- This user exists on the host machine and an [AuthorizedKeysCommand](https://man.openbsd.org/sshd_config#AuthorizedKeysCommand) is configured in the sshd_config, so it runs the command to validate the authorized_keys.
+
+- The authorized_keys.sh is linked here. This script outputs the authorized_keys from within the Gitlab Docker container, that gitlab uses to authorize its users.
+
+- The command to the gitlab-shell is replaced on-the-fly to point to the tunnel.sh script from this repo.
+
+- The tunnel.sh script tunnels the command through to the Gitlab Docker container to exactly that script, that we replaced from the command inside the authorized_keys.
 
 ## How can I use it?
 
