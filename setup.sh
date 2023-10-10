@@ -12,6 +12,9 @@ if ! id git &>/dev/null; then
 	# Create user `git`
 	adduser --system --shell /bin/bash git
 
+	# Ensure home dir exists
+	mkdir -p /home/git
+
 	# Add git user to docker group
 	adduser git docker
 
@@ -30,8 +33,8 @@ if ! grep -q 'Match User git' "$SSHD_CONFIG"; then
 	cat >>$SSHD_CONFIG <<EOT
 
 Match User git
-  AuthorizedKeysCommand ${DIR}/authorized_keys.sh
-  AuthorizedKeysCommandUser git
+	AuthorizedKeysCommand ${DIR}/authorized_keys.sh
+	AuthorizedKeysCommandUser git
 EOT
 
 else
