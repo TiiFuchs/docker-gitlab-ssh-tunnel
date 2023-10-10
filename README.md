@@ -21,11 +21,16 @@ If you want to use the default ports with both services, this is a solution.
 
 ## How can I use it?
 
-1. Run the setup.sh script **as root** that creates a `git` system user automatically, adds the needed configuration into the `/etc/ssh/sshd_config` and sets a few rights to get the things working.
+1. Clone this repo somewhere on your host machine
+
+```bash
+git clone https://github.com/TiiFuchs/docker-gitlab-ssh-tunnel.git
+```
+
+2. Run the setup.sh script **as root** that creates a `git` system user automatically, adds the needed configuration into the `/etc/ssh/sshd_config` and sets a few rights to get the things working.
 
 ```bash
 sudo ./setup.sh
 ```
 
-2. I guess that's it...
-
+3. I guess that's it...
