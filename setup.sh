@@ -10,10 +10,7 @@ SSHD_CONFIG="/etc/ssh/sshd_config"
 if ! id git &>/dev/null; then
 
 	# Create user `git`
-	adduser --system --shell /bin/bash git
-
-	# Ensure home dir exists
-	mkdir -p /home/git
+	adduser --system --home /home/git --shell /bin/bash git
 
 	# Add git user to docker group
 	adduser git docker
